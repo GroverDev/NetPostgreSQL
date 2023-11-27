@@ -1,6 +1,6 @@
-﻿namespace Common.Utilities;
+﻿namespace Common.Utilities.Behaviors;
 
 public class ValidationBehavior
 {
-
+    
 }

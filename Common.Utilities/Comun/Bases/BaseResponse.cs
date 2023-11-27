@@ -1,4 +1,4 @@
-﻿namespace Common.Utilities.Comun.Bases;
+﻿namespace Common.Utilities.Bases;
 
 public class BaseResponse<T>
 {
