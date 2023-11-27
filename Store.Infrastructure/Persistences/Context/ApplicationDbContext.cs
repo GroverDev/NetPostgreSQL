@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace Store.Infrastructure;
+namespace Store.Infrastructure.Persistences;
 
 public class ApplicationDbContext
 {

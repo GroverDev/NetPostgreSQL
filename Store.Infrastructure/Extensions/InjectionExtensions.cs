@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Store.Infrastructure;
+namespace Store.Infrastructure.Persistences;
 
 public static class InjectionExtensions
 {
