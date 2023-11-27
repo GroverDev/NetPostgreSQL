@@ -1,2 +1,2 @@
-# NetSqlite
-Net 7 , Dapper, Sqlite
+# NetPostgreSQL
+Net 7 , Dapper, PostgreSQL
