@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Utilities;
+using Common.Utilities.Comun.Bases;
 using Microsoft.AspNetCore.ResponseCompression;
 using Store.Application.Dtos.Response;
 using Store.Application.Interfaces;

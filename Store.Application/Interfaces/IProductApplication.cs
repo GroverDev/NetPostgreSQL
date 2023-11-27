@@ -1,4 +1,4 @@
-﻿using Common.Utilities;
+﻿using Common.Utilities.Comun.Bases;
 using Store.Application.Dtos.Response;
 
 namespace Store.Application.Interfaces;

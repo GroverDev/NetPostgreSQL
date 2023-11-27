@@ -1,12 +1,15 @@
-using Store.Infrastructure.Persistences;
+using Store.Infrastructure;
+using Store.Application.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddInjectionApplication();
+builder.Services.AddInjectionInfraestructure();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInjectionPersistence();
 
 var app = builder.Build();
 

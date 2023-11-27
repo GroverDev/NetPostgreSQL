@@ -3,17 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Domain", "Store.Domain\Store.Domain.csproj", "{2BD8E850-5BB4-4BA1-9CD4-892E74E0042B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Domain", "Store.Domain\Store.Domain.csproj", "{2BD8E850-5BB4-4BA1-9CD4-892E74E0042B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Infrastructure", "Store.Infrastructure\Store.Infrastructure.csproj", "{9F9D9B51-C5B1-4325-9C7D-0514BAC5BDF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Infrastructure", "Store.Infrastructure\Store.Infrastructure.csproj", "{9F9D9B51-C5B1-4325-9C7D-0514BAC5BDF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Application", "Store.Application\Store.Application.csproj", "{4052F7DC-90E2-42FC-8CB7-82FF21A79DE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Application", "Store.Application\Store.Application.csproj", "{4052F7DC-90E2-42FC-8CB7-82FF21A79DE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Utilities", "Common.Utilities\Common.Utilities.csproj", "{9ECEEC02-4152-453B-833D-576BF2394338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Utilities", "Common.Utilities\Common.Utilities.csproj", "{9ECEEC02-4152-453B-833D-576BF2394338}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1-Services", "1-Services", "{B8F4A63B-B983-41D0-88E1-63452EA8FFAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Api", "Store.Api\Store.Api.csproj", "{2840BA77-D72C-413E-AB0D-8E16D7543021}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Api", "Store.Api\Store.Api.csproj", "{2840BA77-D72C-413E-AB0D-8E16D7543021}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-Utils", "5-Utils", "{7C8BB70F-DD20-4EA0-AFEB-EDBF3BFDE74D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-Application", "2-Application", "{BF28E6B1-2084-4938-81AA-B3E9F32FB908}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-Infrastructure", "3-Infrastructure", "{66FB379D-4EE7-4A70-816A-2017B2C011A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Domain", "4-Domain", "{878462E5-8A1F-4A71-A168-DC9305223C52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +54,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{2BD8E850-5BB4-4BA1-9CD4-892E74E0042B} = {878462E5-8A1F-4A71-A168-DC9305223C52}
+		{9F9D9B51-C5B1-4325-9C7D-0514BAC5BDF3} = {66FB379D-4EE7-4A70-816A-2017B2C011A9}
+		{4052F7DC-90E2-42FC-8CB7-82FF21A79DE4} = {BF28E6B1-2084-4938-81AA-B3E9F32FB908}
+		{9ECEEC02-4152-453B-833D-576BF2394338} = {7C8BB70F-DD20-4EA0-AFEB-EDBF3BFDE74D}
 		{2840BA77-D72C-413E-AB0D-8E16D7543021} = {B8F4A63B-B983-41D0-88E1-63452EA8FFAA}
 	EndGlobalSection
 EndGlobal
