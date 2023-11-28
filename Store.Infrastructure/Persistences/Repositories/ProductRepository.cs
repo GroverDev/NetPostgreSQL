@@ -16,7 +16,6 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAllProductsAsync()
     {
         using var connection = _context.CreateConnection;
-        connection.Open();
         var query = @"SELECT p.id, 
                               p.product_code, 
                               p.product_name, 
