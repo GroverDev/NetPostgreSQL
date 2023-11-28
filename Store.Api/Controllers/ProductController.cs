@@ -3,6 +3,8 @@ using Store.Application.Interfaces;
 
 namespace Store.Api;
 
+[Route("api/[controller]")]
+[ApiController]
 public class ProductController: ControllerBase
 {
     private readonly IProductApplication _productApplication;
