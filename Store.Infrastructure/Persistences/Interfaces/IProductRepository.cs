@@ -4,5 +4,5 @@ namespace Store.Infrastructure;
 
 public interface IProductRepository
 {
-    Task<IEnumerable<Product>> ListProducts();
+    Task<IEnumerable<Product>> GetAllProductsAsync();
 }

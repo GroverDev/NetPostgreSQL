@@ -9,7 +9,7 @@ public class ProductMappingProfile : Profile
     public ProductMappingProfile()
     {
         CreateMap<Product, ProductResponseDto>()
-        .ForMember(x =>x.ProviderName, x => x.MapFrom("test"))
+        .ForMember(x =>x.ProviderName, x => x.MapFrom(y=> "sadas"))
         .ReverseMap();
     }
 }

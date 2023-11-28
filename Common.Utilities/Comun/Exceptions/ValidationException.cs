@@ -1,6 +1,6 @@
 ﻿using Common.Utilities.Bases;
 
-namespace Common.Utilities.Comun.Exceptions;
+namespace Common.Utilities.Exceptions;
 
 public class ValidationException : Exception
 {
