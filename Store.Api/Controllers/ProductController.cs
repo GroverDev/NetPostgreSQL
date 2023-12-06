@@ -13,9 +13,11 @@ public class ProductController: ControllerBase
     {
         _productApplication = productApplication;
     }
+
     [HttpGet]
     public async Task<IActionResult> ListProducts()
     {
+        // Lista de productos
         var response = await _productApplication.ListProducts();
         return Ok(response);
     }
