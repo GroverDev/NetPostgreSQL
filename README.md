@@ -1,2 +1,2 @@
 # NetPostgreSQL
-Net 7 , Dapper, PostgreSQL
+Net 8 , Dapper, PostgreSQL
