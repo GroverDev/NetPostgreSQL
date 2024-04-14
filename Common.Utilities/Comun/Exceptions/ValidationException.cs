@@ -2,6 +2,8 @@
 
 namespace Common.Utilities.Exceptions;
 
+
+
 public class ValidationException : Exception
 {
     public IEnumerable<BaseError> Errors { get; }

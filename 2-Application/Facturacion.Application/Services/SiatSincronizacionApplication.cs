@@ -5,7 +5,7 @@ using Siat.Sincronizacion;
 using static Common.Utilities.Message;
 namespace Facturacion.Application;
  
-public class SincronizacionApplication : ISincronizacionApplication
+public class SiatSincronizacionApplication : ISiatSincronizacionApplication
 {
     public async  Task<Response<bool>> OkComunnication()
     {

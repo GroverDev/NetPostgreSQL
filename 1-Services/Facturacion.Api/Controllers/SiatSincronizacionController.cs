@@ -11,9 +11,9 @@ namespace Facturacion.Api;
 
 public class SiatSincronizacionController: ControllerBase
 {
-    private readonly ISincronizacionApplication _sincronizacionApplication;
+    private readonly ISiatSincronizacionApplication _sincronizacionApplication;
 
-    public SiatSincronizacionController(ISincronizacionApplication sincronizacionApplication)
+    public SiatSincronizacionController(ISiatSincronizacionApplication sincronizacionApplication)
     {
         _sincronizacionApplication = sincronizacionApplication;
     }

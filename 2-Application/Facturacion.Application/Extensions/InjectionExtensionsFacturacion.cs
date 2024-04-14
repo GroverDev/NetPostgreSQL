@@ -16,7 +16,7 @@ public static class InjectionExtensionsFacturacion
         //services.AddAutoMapper(Assembly.GetExecutingAssembly());
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<ISincronizacionApplication, SincronizacionApplication>();
+        services.AddScoped<ISiatSincronizacionApplication, SiatSincronizacionApplication>();
         return services;
     }
 }

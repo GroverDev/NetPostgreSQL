@@ -2,7 +2,7 @@
 
 namespace Facturacion.Application;
 
-public interface ISincronizacionApplication
+public interface ISiatSincronizacionApplication
 {
     Task<Response<bool>> OkComunnication();
 }
