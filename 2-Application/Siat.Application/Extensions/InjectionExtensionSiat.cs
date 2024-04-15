@@ -1,12 +1,13 @@
-﻿using System.Reflection;
+﻿
+using System.Reflection;
 //using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Facturacion.Application.Extensions;
+namespace Siat.Application.Extensions;
 
-public static class InjectionExtensionsFacturacion
+public static class InjectionExtensionSiat
 {
-     public static IServiceCollection AddInjectionApplication(this IServiceCollection services)
+     public static IServiceCollection AddInjectionSiat(this IServiceCollection services)
     {
         //services.AddSingleton(configuration);
         // services.AddFluentValidation(options => {
@@ -16,9 +17,7 @@ public static class InjectionExtensionsFacturacion
         //services.AddAutoMapper(Assembly.GetExecutingAssembly());
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<IActividadesApplication, ActividadesApplication>();
+        services.AddScoped<ISincronizacionApplication, SincronizacionApplication>();
         return services;
     }
 }
-
-

@@ -1,4 +1,5 @@
 using Facturacion.Application.Extensions;
+using Siat.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInjectionApplication();
+builder.Services.AddInjectionSiat();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
