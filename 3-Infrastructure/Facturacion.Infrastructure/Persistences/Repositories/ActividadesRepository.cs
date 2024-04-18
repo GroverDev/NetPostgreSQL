@@ -26,9 +26,9 @@ public class ActividadesRepository : IActividadesRepository
                 {
                     actividad.Id = Guid.NewGuid();
                     string sqlQuery = @"
-                    INSERT INTO siat.actividad
-                        (id, codigo_caeb, descripcion, tipo_actividad)
-                    VALUES(@Id, @CodigoCaeb, @Descripcion, @TipoActividad);
+                    INSERT INTO siat.actividades
+                          ( id, codigo_caeb, descripcion, tipo_actividad, state, created_by, created, modified_by, modified)
+                    VALUES(@Id, @CodigoCaeb, @Descripcion, @TipoActividad, @State, @CreatedBy, @created, @ModifiedBy, @Modified);
                     ";
 
                     var result = await db.ExecuteAsync(sqlQuery, actividad);
@@ -52,7 +52,16 @@ public class ActividadesRepository : IActividadesRepository
     {
         using var connection = _context.CreateConnection;
         var query = @"DELETE FROM siat.actividades";
-        var products = await connection.QueryAsync(query);
+        var actividades = await connection.QueryAsync(query);
         return true;
+    }
+
+    public async Task<Actividad> GetActividadByCodigo(string CodigoCaeb)
+    {
+        using var connection = _context.CreateConnection;
+        var query = @"SELECT  * FROM siat.actividades";
+        var actividad = await connection.QuerySingleOrDefaultAsync<Actividad>(query);
+        actividad ??= new Actividad();
+        return actividad;
     }
 }

@@ -2,7 +2,6 @@
 using Common.Utilities;
 using Common.Utilities.Bases;
 using Siat.Sincronizacion;
-using static Common.Utilities.Message;
 
 namespace Siat.Application;
 
@@ -46,37 +45,6 @@ public class SincronizacionApplication : ISincronizacionApplication
         return response;
     }
 
-    public async Task<Response<List<actividadesDto>>> GetActividades(int codigoPuntoVenta, int codigoSucursal, string cuis)
-    {
-        var response = new Response<List<actividadesDto>>();
-        var client = new ServicioFacturacionSincronizacionClient();
-        try
-        {
-            using (new OperationContextScope(client.InnerChannel))
-            {
-                var solicitud = GetSolicitudSincronizacion(codigoPuntoVenta, codigoSucursal, cuis);
-
-                var resp = await client.sincronizarActividadesAsync(solicitud);
-                if (resp.RespuestaListaActividades.transaccion)
-                {
-                    response.Data = resp.RespuestaListaActividades.listaActividades.ToList();
-                    response.Ok = true;
-                }
-                else
-                {
-                    response.Errors = ConvertToBaseErrors(resp.RespuestaListaActividades.mensajesList);
-
-                }
-            }
-        }
-        catch (System.Exception ex)
-        {
-
-            throw new Exception(ex.Message, ex);
-        }
-        return response;
-    }
-
     public async Task<Response<string>> GetFechaYHora(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
         var response = new Response<string>();
@@ -102,6 +70,39 @@ public class SincronizacionApplication : ISincronizacionApplication
         }
         catch (Exception ex)
         {
+            throw new Exception(ex.Message, ex);
+        }
+        return response;
+    }
+
+    public async Task<Response<List<actividadesDto>>> GetActividades(int codigoPuntoVenta, int codigoSucursal, string cuis)
+    {
+        var response = new Response<List<actividadesDto>>();
+        var client = new ServicioFacturacionSincronizacionClient();
+        try
+        {
+            using (new OperationContextScope(client.InnerChannel))
+            {
+                
+                var solicitud = GetSolicitudSincronizacion(codigoPuntoVenta, codigoSucursal, cuis);
+                SoapHeader.Create();    
+                
+                var resp = await client.sincronizarActividadesAsync(solicitud);
+                if (resp.RespuestaListaActividades.transaccion)
+                {
+                    response.Data = resp.RespuestaListaActividades.listaActividades.ToList();
+                    response.Ok = true;
+                }
+                else
+                {
+                    response.Errors = ConvertToBaseErrors(resp.RespuestaListaActividades.mensajesList);
+
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+
             throw new Exception(ex.Message, ex);
         }
         return response;
@@ -580,7 +581,7 @@ public class SincronizacionApplication : ISincronizacionApplication
     #region Metodos Privados
     private solicitudSincronizacion GetSolicitudSincronizacion(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
-        SoapHeader.Create();
+       
         var siat = new SiatParameters();
         var solicitud = new solicitudSincronizacion
         {

@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common.Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\..\2-Application\Facturacion.Application\Facturacion.Application.csproj" />
+    <ProjectReference Include="..\..\3-Infrastructure\Facturacion.Infrastructure\Facturacion.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using Facturacion.Infrastructure.Extensions;
 using Facturacion.Application.Extensions;
 using Siat.Application.Extensions;
 
@@ -14,8 +15,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Injeccion de dependencias 
+builder.Services.AddInjectionInfraestructure();
 builder.Services.AddInjectionApplication();
 builder.Services.AddInjectionSiat();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

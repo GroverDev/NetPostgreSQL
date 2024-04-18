@@ -23,6 +23,9 @@ public class SiatSincronizacionController: ControllerBase
     {
         var response =  await _actividadesApplication.OkComunnication();
         return Ok(response);
+
+        // var response = await _actividadesApplication.UpdateActividades(1);
+        // return Ok(response);
     }
 }
 

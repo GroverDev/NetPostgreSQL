@@ -3,9 +3,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common.Utilities\Common.Utilities.csproj" />
     <ProjectReference Include="..\Siat.Application\Siat.Application.csproj" />
+    <ProjectReference Include="..\..\3-Infrastructure\Facturacion.Infrastructure\Facturacion.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
