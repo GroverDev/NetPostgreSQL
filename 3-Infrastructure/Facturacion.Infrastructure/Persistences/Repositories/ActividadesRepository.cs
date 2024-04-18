@@ -14,7 +14,7 @@ public class ActividadesRepository : IActividadesRepository
         _context = context;
     }
 
-    public async Task<bool> CreateActividad(Actividad actividad)
+    public async Task<bool> CreateActividad(Actividades actividad)
     {
         bool ok;
         using var db = _context.CreateConnection;
@@ -24,7 +24,6 @@ public class ActividadesRepository : IActividadesRepository
                 using var transaction = db.BeginTransaction();
                 try
                 {
-                    actividad.Id = Guid.NewGuid();
                     string sqlQuery = @"
                     INSERT INTO siat.actividades
                           ( id, codigo_caeb, descripcion, tipo_actividad, state, created_by, created, modified_by, modified)
@@ -56,12 +55,20 @@ public class ActividadesRepository : IActividadesRepository
         return true;
     }
 
-    public async Task<Actividad> GetActividadByCodigo(string CodigoCaeb)
+    public async Task<Actividades> GetActividadByCodigo(string CodigoCaeb)
     {
-        using var connection = _context.CreateConnection;
-        var query = @"SELECT  * FROM siat.actividades";
-        var actividad = await connection.QuerySingleOrDefaultAsync<Actividad>(query);
-        actividad ??= new Actividad();
-        return actividad;
+        using var db = _context.CreateConnection;
+        try
+        {
+            db.Open();
+            var query = @"SELECT  * FROM siat.actividades WHERE codigo_caeb = @CodigoCaeb";
+            var actividad = await db.QueryFirstOrDefaultAsync<Actividades>(query,new {CodigoCaeb = CodigoCaeb});
+            actividad ??= new Actividades();
+            return actividad;     
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally {db.Close(); }
+       
     }
 }

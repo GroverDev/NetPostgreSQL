@@ -1,12 +1,22 @@
-﻿using System.ServiceModel;
+﻿using System.Runtime.CompilerServices;
+using System.ServiceModel;
 using Common.Utilities;
 using Common.Utilities.Bases;
+using Facturacion.Domain;
+using Microsoft.Extensions.Options;
 using Siat.Sincronizacion;
 
 namespace Siat.Application;
 
 public class SincronizacionApplication : ISincronizacionApplication
 {
+    private readonly  ConfigSiat _configSiat;
+
+    public SincronizacionApplication(IOptions<ConfigSiat> configSiat)
+    {
+        _configSiat = configSiat.Value;
+    }
+
     public async Task<Response<bool>> OkComunnication()
     {
         var cliente = new ServicioFacturacionSincronizacionClient();
@@ -29,17 +39,17 @@ public class SincronizacionApplication : ISincronizacionApplication
                 else
                 {
                     response.Data = response.Ok = false;
-                    response.Message.SetMessage(MessageTypes.Error, "Error");
+                    response.SetMessage(MessageTypes.Error, "Error");
                 }
             }
         }
         catch (TimeoutException timeProblem)
         {
-            response.Message.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con la Unidad de Tecnología e Innovación de la CSBP", timeProblem);
+            response.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con la Unidad de Tecnología e Innovación de la CSBP", timeProblem);
         }
         catch (Exception ex)
         {
-            response.Message.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con la Unidad de Tecnología e Innovación de la CSBP", ex);
+            response.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con la Unidad de Tecnología e Innovación de la CSBP", ex);
         }
 
         return response;
@@ -85,7 +95,6 @@ public class SincronizacionApplication : ISincronizacionApplication
             {
                 
                 var solicitud = GetSolicitudSincronizacion(codigoPuntoVenta, codigoSucursal, cuis);
-                SoapHeader.Create();    
                 
                 var resp = await client.sincronizarActividadesAsync(solicitud);
                 if (resp.RespuestaListaActividades.transaccion)
@@ -581,18 +590,28 @@ public class SincronizacionApplication : ISincronizacionApplication
     #region Metodos Privados
     private solicitudSincronizacion GetSolicitudSincronizacion(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
-       
-        var siat = new SiatParameters();
-        var solicitud = new solicitudSincronizacion
-        {
-            nit = siat.nit,
-            codigoAmbiente = siat.codigoAmbiente,
-            codigoSistema = siat.codigoSistema,
-            codigoPuntoVentaSpecified = true,
+       SoapHeader.Create();    
+        
+        var solicitud = new solicitudSincronizacion{
             codigoPuntoVenta = codigoPuntoVenta,
             codigoSucursal = codigoSucursal,
-            cuis = cuis
+            cuis = cuis,
         };
+        solicitud.nit =Convert.ToInt64(_configSiat.Nit); 
+        solicitud.codigoAmbiente =Convert.ToInt32(_configSiat.CodigoAmbiente);
+        solicitud.codigoSistema = _configSiat.CodigoSistema;
+        solicitud.codigoPuntoVentaSpecified = true; 
+        
+        // {
+        //     nit = Convert.ToInt64(_configSiat.Nit),
+        //     codigoAmbiente = Convert.ToInt32(_configSiat.CodigoAmbiente),
+        //     codigoSistema = _configSiat.CodigoSistema,
+        //     codigoPuntoVentaSpecified = true,
+
+        //     codigoPuntoVenta = codigoPuntoVenta,
+        //     codigoSucursal = codigoSucursal,
+        //     cuis = cuis,
+        // };
         return solicitud;
     }
     private List<BaseError> ConvertToBaseErrors(mensajeServicio[] mensajes)

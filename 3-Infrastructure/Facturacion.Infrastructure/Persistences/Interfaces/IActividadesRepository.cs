@@ -6,7 +6,7 @@ public interface IActividadesRepository
 {
     Task<bool> DeleteAllActividades();
 
-    Task<bool> CreateActividad(Actividad actividad);   
+    Task<bool> CreateActividad(Actividades actividad);   
 
-    Task<Actividad> GetActividadByCodigo(string CodigoCaeb);
+    Task<Actividades> GetActividadByCodigo(string CodigoCaeb);
 }  

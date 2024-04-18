@@ -27,7 +27,7 @@ public class ActividadesApplication(
         var response = new Response<bool>();
         int codigoPutnoDeVenta = 0;
         int codigoSucursal = 5;
-        string codigoCuis = "E813D239";
+        string codigoCuis = "E8465CDD";
         try
         {
             var resp = await _sincronizacionApplication.GetActividades(codigoPutnoDeVenta, codigoSucursal, codigoCuis);
@@ -39,18 +39,18 @@ public class ActividadesApplication(
                     if (actividadFacturacion.CodigoCaeb == "")
                     {
                         var fechaActual = DateTime.Now;
-                        var actividad = _mapper.Map<Actividad>(actividadSiat);
+                        var actividad = _mapper.Map<Actividades>(actividadSiat);
                         actividad.Id = Guid.NewGuid();
                         actividad.Created = actividad.Modified = fechaActual;
                         actividad.CreatedBy = actividad.ModifiedBy = createdBy;
                         await _actividadesRepository.CreateActividad(actividad);
-                        response.Ok = true;
                     }
+                    response.Ok = true;
                 }
             }
         }
-        catch (CustomException ex) { response.Message.SetMessage(MessageTypes.Warning, ex.Message); }
-        catch (Exception ex) {  response.Message.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con Sistemas.", ex);  }
+        catch (CustomException ex) { response.SetMessage(MessageTypes.Warning, ex.Message); }
+        catch (Exception ex) {  response.SetLogMessage(MessageTypes.Error, "Ocurrio un error, por favor comuniquese con Sistemas.", ex);  }
 
         return response;
     }

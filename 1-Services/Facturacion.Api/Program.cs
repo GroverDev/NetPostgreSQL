@@ -1,6 +1,11 @@
 using Facturacion.Infrastructure.Extensions;
 using Facturacion.Application.Extensions;
 using Siat.Application.Extensions;
+using Dapper;
+using Facturacion.Api;
+
+DefaultTypeMap.MatchNamesWithUnderscores = true;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +24,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInjectionInfraestructure();
 builder.Services.AddInjectionApplication();
 builder.Services.AddInjectionSiat();
+
+var startup = new Startup(builder.Configuration);
+
+startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 

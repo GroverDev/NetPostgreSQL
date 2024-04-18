@@ -34,13 +34,13 @@ public class Msg
 
 
 
-    public void SetMessage(MessageTypes typeMessage, string description)
+    internal void SetMessage(MessageTypes typeMessage, string description)
     {
         this.MessageType = getMessageType(typeMessage);
         this.Description = description;
         this.Id = "0";
     }
-    public void SetLogMessage(MessageTypes typeMessage, string description, Exception ex)
+    internal void SetLogMessage(MessageTypes typeMessage, string description, Exception ex)
     {
         this.MessageType = getMessageType(typeMessage);
         this.Description = description;

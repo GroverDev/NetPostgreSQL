@@ -8,7 +8,7 @@ public class ActividadMappingProfile:Profile
 {
     public ActividadMappingProfile()
     {
-        CreateMap<Actividad, actividadesDto>()
+        CreateMap<Actividades, actividadesDto>()
         .ReverseMap();
     }
 }

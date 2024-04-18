@@ -21,11 +21,11 @@ public class SiatSincronizacionController: ControllerBase
     [HttpGet("VerificaComunicacion")]
     public async Task<ActionResult<Response<bool>>> GetVerifica()
     {
-        var response =  await _actividadesApplication.OkComunnication();
-        return Ok(response);
-
-        // var response = await _actividadesApplication.UpdateActividades(1);
+        // var response =  await _actividadesApplication.OkComunnication();
         // return Ok(response);
+
+        var response = await _actividadesApplication.UpdateActividades(1);
+        return Ok(response);
     }
 }
 
