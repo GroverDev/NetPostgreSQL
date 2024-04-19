@@ -7,5 +7,6 @@ public class ConfigSiat
     public string CodigoModalidad { get; set; } ="";
     public string CodigoSistema { get; set; } ="";
     public string RazonSocial { get; set; } ="";
+    public string ApiKey { get; set; } ="";
 }
 

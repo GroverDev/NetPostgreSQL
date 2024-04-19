@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using Common.Utilities;
 using Common.Utilities.Bases;
 using Facturacion.Domain;
@@ -26,7 +27,8 @@ public class SincronizacionApplication : ISincronizacionApplication
         {
             using (new OperationContextScope(cliente.InnerChannel))
             {
-                SoapHeader.Create();
+                ApikeyHeader.Create(_configSiat.ApiKey);
+
                 var responseVerificarComunicacion = await cliente.verificarComunicacionAsync();
                 if (responseVerificarComunicacion.@return.transaccion)
                 {
@@ -590,28 +592,19 @@ public class SincronizacionApplication : ISincronizacionApplication
     #region Metodos Privados
     private solicitudSincronizacion GetSolicitudSincronizacion(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
-       SoapHeader.Create();    
-        
-        var solicitud = new solicitudSincronizacion{
+        ApikeyHeader.Create(_configSiat.ApiKey);
+        var solicitud = new solicitudSincronizacion
+        {
             codigoPuntoVenta = codigoPuntoVenta,
             codigoSucursal = codigoSucursal,
             cuis = cuis,
+            //Del config
+            nit = Convert.ToInt64(_configSiat.Nit),
+            codigoAmbiente = Convert.ToInt32(_configSiat.CodigoAmbiente),
+            codigoSistema = _configSiat.CodigoSistema,
+            codigoPuntoVentaSpecified = true
         };
-        solicitud.nit =Convert.ToInt64(_configSiat.Nit); 
-        solicitud.codigoAmbiente =Convert.ToInt32(_configSiat.CodigoAmbiente);
-        solicitud.codigoSistema = _configSiat.CodigoSistema;
-        solicitud.codigoPuntoVentaSpecified = true; 
         
-        // {
-        //     nit = Convert.ToInt64(_configSiat.Nit),
-        //     codigoAmbiente = Convert.ToInt32(_configSiat.CodigoAmbiente),
-        //     codigoSistema = _configSiat.CodigoSistema,
-        //     codigoPuntoVentaSpecified = true,
-
-        //     codigoPuntoVenta = codigoPuntoVenta,
-        //     codigoSucursal = codigoSucursal,
-        //     cuis = cuis,
-        // };
         return solicitud;
     }
     private List<BaseError> ConvertToBaseErrors(mensajeServicio[] mensajes)
