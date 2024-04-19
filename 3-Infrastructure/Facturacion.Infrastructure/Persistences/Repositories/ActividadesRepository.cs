@@ -62,7 +62,7 @@ public class ActividadesRepository : IActividadesRepository
         {
             db.Open();
             var query = @"SELECT  * FROM siat.actividades WHERE codigo_caeb = @CodigoCaeb";
-            var actividad = await db.QueryFirstOrDefaultAsync<Actividades>(query,new {CodigoCaeb = CodigoCaeb});
+            var actividad = await db.QueryFirstOrDefaultAsync<Actividades>(query,new {CodigoCaeb});
             actividad ??= new Actividades();
             return actividad;     
         }

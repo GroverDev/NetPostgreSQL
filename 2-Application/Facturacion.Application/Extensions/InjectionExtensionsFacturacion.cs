@@ -17,6 +17,7 @@ public static class InjectionExtensionsFacturacion
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<IActividadesApplication, ActividadesApplication>();
+        services.AddScoped<IActividadesDocumentoSectorApplication, ActividadesDocumentoSectorApplication>();
         return services;
     }
 }

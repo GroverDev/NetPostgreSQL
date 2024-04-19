@@ -17,5 +17,11 @@ public class CustomException : Exception
         Errors = errors;
     }
     public CustomException(string message, Exception innerException) : base(message, innerException)
-    {}
+    {
+        Errors = new List<BaseError>();
+    }
+    public CustomException(string message) : base(message)
+    {
+        Errors = new List<BaseError>();
+    }
 }

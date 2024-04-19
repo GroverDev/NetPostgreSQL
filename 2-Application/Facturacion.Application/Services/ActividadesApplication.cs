@@ -43,10 +43,11 @@ public class ActividadesApplication(
                         actividad.Id = Guid.NewGuid();
                         actividad.Created = actividad.Modified = fechaActual;
                         actividad.CreatedBy = actividad.ModifiedBy = createdBy;
+                        actividad.State = true;
                         await _actividadesRepository.CreateActividad(actividad);
                     }
-                    response.Ok = true;
                 }
+                response.Ok = true;
             }
         }
         catch (CustomException ex) { response.SetMessage(MessageTypes.Warning, ex.Message); }

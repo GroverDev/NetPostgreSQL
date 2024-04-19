@@ -8,6 +8,7 @@ public static class InjectionExtensions
     {
         services.AddSingleton<FacturacionDbContext>();
         services.AddScoped<IActividadesRepository, ActividadesRepository>();
+        services.AddScoped<IActividadesDocumentoSectorRepository, ActividadesDocumentoSectorRepository>();
         return services;
     }
 }
