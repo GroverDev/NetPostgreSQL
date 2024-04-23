@@ -4,13 +4,11 @@ using Facturacion.Domain;
 
 namespace Facturacion.Infrastructure;
 
-public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) : IActividadesDocumentoSectorRepository
+public class LeyendasFacturaRepository(FacturacionDbContext _context) : ILeyendasFacturaRepository
 {
-    private readonly FacturacionDbContext _context = context;
-
-    public async Task<bool> CreateActividadDocumentoSector(ActividadesDocumentoSector actividad)
+    public async Task<bool> CreateLeyendaFactura(LeyendasFactura leyenda)
     {
-        bool ok=false;
+         bool ok=false;
         using var db = _context.CreateConnection;
         try
         {
@@ -19,12 +17,12 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
             try
             {
                 string sqlQuery = @"
-                    INSERT INTO siat.actividades_documento_sector
-                          (id, codigo_actividad,  codigo_documento_sector, tipo_documento_sector, state,  created_by, created,  modified_by, modified)
-                    VALUES(@Id, @CodigoActividad, @CodigoDocumentoSector,  @TipoDocumentoSector , @State, @CreatedBy, @created, @ModifiedBy, @Modified);
+                    INSERT INTO siat.leyendas_factura
+                              (id, codigo_actividad, descripcion_leyenda, state, created_by, created, modified_by, modified)
+                        VALUES(@Id, @CodigoActividad, @DescripcionLeyenda, @State, @CreatedBy, @created, @ModifiedBy, @Modified);
                     ";
 
-                var result = await db.ExecuteAsync(sqlQuery, actividad);
+                var result = await db.ExecuteAsync(sqlQuery, leyenda);
                 transaction.Commit();
                 ok = true;
             }
@@ -39,22 +37,8 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
         finally { db.Close(); }
         return ok;
     }
-    public async Task<ActividadesDocumentoSector> GetActividadDocumentoSectorByCodigo(int CodigoDocumentoSector, string CodigoActividad)
-    {
-        using var db = _context.CreateConnection;
-        try
-        {
-            db.Open();
-            var query = @"SELECT  * FROM siat.actividades_documento_sector WHERE codigo_documento_sector = @CodigoDocumentoSector AND codigo_actividad = @CodigoActividad";
-            var actividad = await db.QueryFirstOrDefaultAsync<ActividadesDocumentoSector>(query, new { CodigoDocumentoSector, CodigoActividad });
-            actividad ??= new ActividadesDocumentoSector();
-            return actividad;
-        }
-        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
-        catch (Exception ex) { throw new Exception(ex.Message, ex); }
-        finally { db.Close(); }
-    }
-    public async Task<bool> DisableAllActividadDocumentoSector()
+
+    public async Task<bool> DisableAllLeyendasFactura()
     {
         bool ok;
         using var db = _context.CreateConnection;
@@ -64,7 +48,7 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
             using var transaction = db.BeginTransaction();
             try
             {
-                string sqlQuery = @" UPDATE siat.actividades_documento_sector
+                string sqlQuery = @" UPDATE siat.leyendas_factura
                                      SET state = @State, modified = @Modified WHERE state";
                 var result = await db.ExecuteAsync(sqlQuery, new { State = false, Modified =  DateTime.Now});
                 transaction.Commit();
@@ -82,7 +66,7 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
         return ok;
     }
 
-    public async Task<bool> EnableActividadDocumentoSector(ActividadesDocumentoSector actividadDocumentoSector)
+    public async Task<bool> EnableLeyendaFactura(LeyendasFactura leyenda)
     {
         bool ok=false;
         using var db = _context.CreateConnection;
@@ -92,12 +76,12 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
             using var transaction = db.BeginTransaction();
             try
             {
-                string sqlQuery = @" UPDATE siat.actividades_documento_sector
+                string sqlQuery = @" UPDATE siat.leyendas_factura
                                         SET state = @State, modified = @Modified
                                       WHERE id = @Id
                                    ";
 
-                var result = await db.ExecuteAsync(sqlQuery, actividadDocumentoSector );
+                var result = await db.ExecuteAsync(sqlQuery, leyenda );
                 transaction.Commit();
                 ok = true;
             }
@@ -111,5 +95,23 @@ public class ActividadesDocumentoSectorRepository(FacturacionDbContext context) 
         catch (Exception ex) { throw new Exception(ex.Message, ex); }
         finally { db.Close(); }
         return ok;
+    }
+
+    public async Task<LeyendasFactura> GetLeyendaFacturaByCodigo(string CodigoActividad, string DescripcionLeyenda)
+    {
+         using var db = _context.CreateConnection;
+        try
+        {
+            db.Open();
+            var query = @"SELECT  * 
+                            FROM siat.leyendas_factura
+                           WHERE codigo_actividad= @CodigoActividad AND descripcion_leyenda = @DescripcionLeyenda ";
+            var leyenda = await db.QueryFirstOrDefaultAsync<LeyendasFactura>(query, new { CodigoActividad, DescripcionLeyenda });
+            leyenda ??= new LeyendasFactura();
+            return leyenda;
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally { db.Close(); }
     }
 }

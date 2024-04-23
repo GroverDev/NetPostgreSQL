@@ -118,7 +118,6 @@ public class SincronizacionApplication : ISincronizacionApplication
         }
         return response;
     }
-
     public async Task<Response<List<actividadesDocumentoSectorDto>>> GetActividadesDocumentoSector(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
         var response = new Response<List<actividadesDocumentoSectorDto>>();
@@ -148,7 +147,35 @@ public class SincronizacionApplication : ISincronizacionApplication
         }
         return response;
     }
+    public async Task<Response<List<productosDto>>> GetProductosServicios(int codigoPuntoVenta, int codigoSucursal, string cuis)
+    {
+        var response = new Response<List<productosDto>>();
+        var client = new ServicioFacturacionSincronizacionClient();
+        try
+        {
+            using (new OperationContextScope(client.InnerChannel))
+            {
+                var solicitud = GetSolicitudSincronizacion(codigoPuntoVenta, codigoSucursal, cuis);
 
+                var resp = await client.sincronizarListaProductosServiciosAsync(solicitud);
+                if (resp.RespuestaListaProductos.transaccion)
+                {
+                    response.Data = resp.RespuestaListaProductos.listaCodigos.ToList();
+                    response.Ok = true;
+                }
+                else
+                {
+                    response.Errors = ConvertToBaseErrors(resp.RespuestaListaProductos.mensajesList);
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+        return response;
+    }
     public async Task<Response<List<parametricaLeyendasDto>>> GetParametricasLeyendasFactura(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
         var response = new Response<List<parametricaLeyendasDto>>();
@@ -207,37 +234,6 @@ public class SincronizacionApplication : ISincronizacionApplication
         }
         return response;
     }
-
-    public async Task<Response<List<productosDto>>> GetProductosServicios(int codigoPuntoVenta, int codigoSucursal, string cuis)
-    {
-        var response = new Response<List<productosDto>>();
-        var client = new ServicioFacturacionSincronizacionClient();
-        try
-        {
-            using (new OperationContextScope(client.InnerChannel))
-            {
-                var solicitud = GetSolicitudSincronizacion(codigoPuntoVenta, codigoSucursal, cuis);
-
-                var resp = await client.sincronizarListaProductosServiciosAsync(solicitud);
-                if (resp.RespuestaListaProductos.transaccion)
-                {
-                    response.Data = resp.RespuestaListaProductos.listaCodigos.ToList();
-                    response.Ok = true;
-                }
-                else
-                {
-                    response.Errors = ConvertToBaseErrors(resp.RespuestaListaProductos.mensajesList);
-
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-        return response;
-    }
-
     public async Task<Response<List<parametricasDto>>> GetParametricasEventosSignificativos(int codigoPuntoVenta, int codigoSucursal, string cuis)
     {
         var response = new Response<List<parametricasDto>>();

@@ -9,6 +9,7 @@ public static class InjectionExtensions
         services.AddSingleton<FacturacionDbContext>();
         services.AddScoped<IActividadesRepository, ActividadesRepository>();
         services.AddScoped<IActividadesDocumentoSectorRepository, ActividadesDocumentoSectorRepository>();
+        services.AddScoped<ILeyendasFacturaRepository, LeyendasFacturaRepository>();
         return services;
     }
 }
