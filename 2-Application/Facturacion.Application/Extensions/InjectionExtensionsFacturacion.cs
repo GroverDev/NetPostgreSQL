@@ -19,6 +19,7 @@ public static class InjectionExtensionsFacturacion
         services.AddScoped<IActividadesApplication, ActividadesApplication>();
         services.AddScoped<IActividadesDocumentoSectorApplication, ActividadesDocumentoSectorApplication>();
         services.AddScoped<ILeyendasFacturaApplication, LeyendasFacturaApplication>();
+        services.AddScoped<IParametrosApplication, ParametrosApplication>();
         return services;
     }
 }

@@ -10,6 +10,7 @@ public static class InjectionExtensions
         services.AddScoped<IActividadesRepository, ActividadesRepository>();
         services.AddScoped<IActividadesDocumentoSectorRepository, ActividadesDocumentoSectorRepository>();
         services.AddScoped<ILeyendasFacturaRepository, LeyendasFacturaRepository>();
+        services.AddScoped<IParametrosRepository, ParametrosRepository>();
         return services;
     }
 }
