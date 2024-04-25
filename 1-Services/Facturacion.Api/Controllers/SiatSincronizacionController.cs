@@ -9,7 +9,7 @@ namespace Facturacion.Api;
 [Route("api/[controller]")]
 [ApiController]
 
-public class SiatSincronizacionController(IParametrosApplication _parametrosApplication) : ControllerBase
+public class SiatSincronizacionController(IProductosServiciosApplication _productosServiciosApplication) : ControllerBase
 {
      [HttpGet("VerificaComunicacion")]
     public async Task<ActionResult<Response<bool>>> GetVerifica()
@@ -23,7 +23,10 @@ public class SiatSincronizacionController(IParametrosApplication _parametrosAppl
         // var response = await _leyendasFacturaApplication.UpdateLeyendasFactura(1);
         // return Ok(response);
 
-        var response = await _parametrosApplication.UpdateParametros(1);
+        // var response = await _parametrosApplication.UpdateParametros(1);
+        // return Ok(response);
+
+        var response = await _productosServiciosApplication.UpdateProductos(1);
         return Ok(response);
 
     }
