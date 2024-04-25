@@ -10,18 +10,18 @@ namespace Facturacion.Application;
 public class ProductosServiciosApplication (
     ISincronizacionApplication _sincronizacionApplication,
     IProductosServiciosRepository _productosRepository,
+    ISincronizacionRequestRepository _sincronizacionRequestRepository,
     IMapper _mapper
 ) : IProductosServiciosApplication
 {
     public async Task<Response<bool>> UpdateProductos(int createdBy)
     {
          var response = new Response<bool>();
-        int codigoPutnoDeVenta = 0;
-        int codigoSucursal = 5;
-        string codigoCuis = "E8465CDD";
+        var sinc = await _sincronizacionRequestRepository.GetSincronizacionRequest(0);
+       
         try
         {
-            var resp = await _sincronizacionApplication.GetProductosServicios(codigoPutnoDeVenta, codigoSucursal, codigoCuis);
+            var resp = await _sincronizacionApplication.GetProductosServicios(sinc.CodigoPuntoVenta,sinc.CodigoSucursal, sinc.CodigoCUIS);
             if (resp.Ok)
             {
                 if (await _productosRepository.DisableAllProductosServicios())

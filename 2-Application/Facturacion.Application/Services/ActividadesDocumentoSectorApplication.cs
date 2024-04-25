@@ -8,23 +8,19 @@ using Siat.Application;
 namespace Facturacion.Application;
 
 public class ActividadesDocumentoSectorApplication(
-    ISincronizacionApplication sincronizacionApplication,
-    IActividadesDocumentoSectorRepository actividadesDocumentoSectorRepository,
-    IMapper mapper
+    ISincronizacionApplication _sincronizacionApplication,
+    IActividadesDocumentoSectorRepository _actividadesDocumentoSectorRepository,
+    ISincronizacionRequestRepository _sincronizacionRequestRepository,
+    IMapper _mapper
     ) : IActividadesDocumentoSectorApplication
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly ISincronizacionApplication _sincronizacionApplication = sincronizacionApplication;
-    private readonly IActividadesDocumentoSectorRepository _actividadesDocumentoSectorRepository = actividadesDocumentoSectorRepository;
     public async Task<Response<bool>> UpdateActividadesDocumentoSector(int createdBy)
     {
         var response = new Response<bool>();
-        int codigoPutnoDeVenta = 0;
-        int codigoSucursal = 5;
-        string codigoCuis = "E8465CDD";
+        var sinc = await _sincronizacionRequestRepository.GetSincronizacionRequest(0);
         try
         {
-            var resp = await _sincronizacionApplication.GetActividadesDocumentoSector(codigoPutnoDeVenta, codigoSucursal, codigoCuis);
+            var resp = await _sincronizacionApplication.GetActividadesDocumentoSector(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS);
             if (resp.Ok)
             {
                 if (await _actividadesDocumentoSectorRepository.DisableAllActividadDocumentoSector())

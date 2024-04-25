@@ -12,6 +12,7 @@ public static class InjectionExtensions
         services.AddScoped<ILeyendasFacturaRepository, LeyendasFacturaRepository>();
         services.AddScoped<IParametrosRepository, ParametrosRepository>();
         services.AddScoped<IProductosServiciosRepository, ProductosServiciosRepository>();
+        services.AddScoped<ISincronizacionRequestRepository, SincronizacionRequestRepository>();
         return services;
     }
 }

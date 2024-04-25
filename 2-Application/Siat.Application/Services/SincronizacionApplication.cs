@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
+﻿using System.ServiceModel;
 using Common.Utilities;
 using Common.Utilities.Bases;
 using Facturacion.Domain;

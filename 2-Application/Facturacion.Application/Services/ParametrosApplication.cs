@@ -10,15 +10,14 @@ namespace Facturacion.Application;
 public class ParametrosApplication(
     IParametrosRepository _parametrosRepository,
     ISincronizacionApplication _sincronizacionApplication,
+    ISincronizacionRequestRepository _sincronizacionRequestRepository,
     IMapper _mapper
 ) : IParametrosApplication
 {
     public async Task<Response<bool>> UpdateParametros(int createdBy)
     {
         var response = new Response<bool>();
-        int codigoPutnoDeVenta = 0;
-        int codigoSucursal = 5;
-        string codigoCuis = "E8465CDD";
+        var sinc = await _sincronizacionRequestRepository.GetSincronizacionRequest(0);
         try
         {
             var respParametrosSiat = new Response<List<Siat.Sincronizacion.parametricasDto>>();
@@ -26,20 +25,20 @@ public class ParametrosApplication(
             {
                 respParametrosSiat = parametroEnum switch
                 {
-                    ParametrosEnum.MENSAJES_SERVICIO => await _sincronizacionApplication.GetParametricasMensajesServicios(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.EVENTOS_SIGNIFICATIVOS => await _sincronizacionApplication.GetParametricasEventosSignificativos(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.MOTIVO_ANULACION => await _sincronizacionApplication.GetParametricasMotivoAnulacion(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.PAIS_ORIGEN => await _sincronizacionApplication.GetParametricasPaisOrigen(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_DOCUMENTO_IDENTIDAD => await _sincronizacionApplication.GetParametricasTipoDocumentoIdentidad(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_DOCUMENTO_SECTOR => await _sincronizacionApplication.GetParametricasTipoDocumentoSector(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_EMISION => await _sincronizacionApplication.GetParametricasTipoEmision(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_HABITACION => await _sincronizacionApplication.GetParametricasTipoHabitacion(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_METODO_PAGO => await _sincronizacionApplication.GetParametricasTipoMetodoPago(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_MONEDA => await _sincronizacionApplication.GetParametricasTipoMoneda(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPO_PUNTO_VENTA => await _sincronizacionApplication.GetParametricasTipoPuntoVenta(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.TIPOS_FACTURA => await _sincronizacionApplication.GetParametricasTiposFactura(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    ParametrosEnum.UNIDAD_MEDIDA => await _sincronizacionApplication.GetParametricasTiposFactura(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
-                    _ => await _sincronizacionApplication.GetParametricasMensajesServicios(codigoPutnoDeVenta, codigoSucursal, codigoCuis),
+                    ParametrosEnum.MENSAJES_SERVICIO => await _sincronizacionApplication.GetParametricasMensajesServicios(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.EVENTOS_SIGNIFICATIVOS => await _sincronizacionApplication.GetParametricasEventosSignificativos(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.MOTIVO_ANULACION => await _sincronizacionApplication.GetParametricasMotivoAnulacion(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.PAIS_ORIGEN => await _sincronizacionApplication.GetParametricasPaisOrigen(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_DOCUMENTO_IDENTIDAD => await _sincronizacionApplication.GetParametricasTipoDocumentoIdentidad(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_DOCUMENTO_SECTOR => await _sincronizacionApplication.GetParametricasTipoDocumentoSector(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_EMISION => await _sincronizacionApplication.GetParametricasTipoEmision(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_HABITACION => await _sincronizacionApplication.GetParametricasTipoHabitacion(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_METODO_PAGO => await _sincronizacionApplication.GetParametricasTipoMetodoPago(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_MONEDA => await _sincronizacionApplication.GetParametricasTipoMoneda(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPO_PUNTO_VENTA => await _sincronizacionApplication.GetParametricasTipoPuntoVenta(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.TIPOS_FACTURA => await _sincronizacionApplication.GetParametricasTiposFactura(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    ParametrosEnum.UNIDAD_MEDIDA => await _sincronizacionApplication.GetParametricasTiposFactura(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
+                    _ => await _sincronizacionApplication.GetParametricasMensajesServicios(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS),
                 };
                 if (respParametrosSiat.Ok)
                 {

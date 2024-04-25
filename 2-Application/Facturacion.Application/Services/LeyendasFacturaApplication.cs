@@ -10,18 +10,17 @@ namespace Facturacion.Application;
 public class LeyendasFacturaApplication
     (   ISincronizacionApplication _sincronizacionApplication,
         ILeyendasFacturaRepository _leyendasFacturaRepository,
+        ISincronizacionRequestRepository _sincronizacionRequestRepository,
         IMapper _mapper
     ) : ILeyendasFacturaApplication
 {
     public async Task<Response<bool>> UpdateLeyendasFactura(int createdBy)
     {
         var response = new Response<bool>();
-        int codigoPutnoDeVenta = 0;
-        int codigoSucursal = 5;
-        string codigoCuis = "E8465CDD";
+        var sinc = await _sincronizacionRequestRepository.GetSincronizacionRequest(0);
         try
         {
-            var resp = await _sincronizacionApplication.GetParametricasLeyendasFactura(codigoPutnoDeVenta, codigoSucursal, codigoCuis);
+            var resp = await _sincronizacionApplication.GetParametricasLeyendasFactura(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS);
             if (resp.Ok)
             {
                 if (await _leyendasFacturaRepository.DisableAllLeyendasFactura())

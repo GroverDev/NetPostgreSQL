@@ -8,15 +8,13 @@ using Common.Utilities.Exceptions;
 
 namespace Facturacion.Application;
 public class ActividadesApplication(
-    ISincronizacionApplication sincronizacionApplication,
-    IActividadesRepository actividadesRepository,
-    IMapper mapper) : IActividadesApplication
+    ISincronizacionApplication _sincronizacionApplication,
+    IActividadesRepository _actividadesRepository,
+    ISincronizacionRequestRepository _sincronizacionRequestRepository,
+    IMapper _mapper
+    ) : IActividadesApplication
 {
-    private readonly ISincronizacionApplication _sincronizacionApplication = sincronizacionApplication;
-    private readonly IActividadesRepository _actividadesRepository = actividadesRepository;
-    private readonly IMapper _mapper = mapper;
-
-
+   
     public async Task<Response<bool>> OkComunnication()
     {
         return await _sincronizacionApplication.OkComunnication();
@@ -25,12 +23,10 @@ public class ActividadesApplication(
     public async Task<Response<bool>> UpdateActividades(int createdBy)
     {
         var response = new Response<bool>();
-        int codigoPutnoDeVenta = 0;
-        int codigoSucursal = 5;
-        string codigoCuis = "E8465CDD";
+        var sinc = await _sincronizacionRequestRepository.GetSincronizacionRequest(0);
         try
         {
-            var resp = await _sincronizacionApplication.GetActividades(codigoPutnoDeVenta, codigoSucursal, codigoCuis);
+            var resp = await _sincronizacionApplication.GetActividades(sinc.CodigoPuntoVenta, sinc.CodigoSucursal, sinc.CodigoCUIS);
             if (resp.Ok)
             {
                 foreach (var actividadSiat in resp.Data)

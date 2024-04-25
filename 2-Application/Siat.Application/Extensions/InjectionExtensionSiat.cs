@@ -18,6 +18,8 @@ public static class InjectionExtensionSiat
         //services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<ISincronizacionApplication, SincronizacionApplication>();
+        services.AddScoped<ICodigosApplication, CodigosApplication>();
+        services.AddScoped<ICompraVentaApplication,CompraVentaApplication>();
         return services;
     }
 }

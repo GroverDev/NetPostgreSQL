@@ -15,7 +15,6 @@
     <PackageReference Include="System.ServiceModel.Federation" Version="4.10.*" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services/" />
     <Folder Include="Utils/" />
   </ItemGroup>
   <ItemGroup>
