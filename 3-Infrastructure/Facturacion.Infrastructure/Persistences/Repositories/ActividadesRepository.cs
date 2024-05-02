@@ -9,7 +9,7 @@ public class ActividadesRepository : IActividadesRepository
 {
     private readonly FacturacionDbContext _context;
 
-    public ActividadesRepository(FacturacionDbContext context )
+    public ActividadesRepository(FacturacionDbContext context)
     {
         _context = context;
     }
@@ -20,55 +20,106 @@ public class ActividadesRepository : IActividadesRepository
         using var db = _context.CreateConnection;
         try
         {
-                db.Open();
-                using var transaction = db.BeginTransaction();
-                try
-                {
-                    string sqlQuery = @"
+            db.Open();
+            using var transaction = db.BeginTransaction();
+            try
+            {
+                string sqlQuery = @"
                     INSERT INTO siat.actividades
-                          ( id, codigo_caeb, descripcion, tipo_actividad, state, created_by, created, modified_by, modified)
-                    VALUES(@Id, @CodigoCaeb, @Descripcion, @TipoActividad, @State, @CreatedBy, @created, @ModifiedBy, @Modified);
+                          ( id, codigo_actividad, descripcion, tipo_actividad, state, created_by, created, modified_by, modified)
+                    VALUES(@Id, @CodigoActividad, @Descripcion, @TipoActividad, @State, @CreatedBy, @created, @ModifiedBy, @Modified);
                     ";
 
-                    var result = await db.ExecuteAsync(sqlQuery, actividad);
-                    transaction.Commit();
-                    ok = true;
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new Exception(ex.Message, ex);
-                }
+                var result = await db.ExecuteAsync(sqlQuery, actividad);
+                transaction.Commit();
+                ok = true;
             }
-            catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
-            catch (Exception ex) { throw new Exception(ex.Message, ex); }
-            finally { db.Close(); }
-            return ok;
-        
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally { db.Close(); }
+        return ok;
+
     }
 
-    public async Task<bool> DeleteAllActividades()
+    public async Task<bool> DisableAllActividades()
     {
-        using var connection = _context.CreateConnection;
-        var query = @"DELETE FROM siat.actividades";
-        var actividades = await connection.QueryAsync(query);
-        return true;
+        bool ok;
+        using var db = _context.CreateConnection;
+        try
+        {
+            db.Open();
+            using var transaction = db.BeginTransaction();
+            try
+            {
+                string sqlQuery = @" UPDATE siat.actividades
+                                     SET state = @State, modified = @Modified WHERE state";
+                var result = await db.ExecuteAsync(sqlQuery, new { State = false, Modified = DateTime.Now });
+                transaction.Commit();
+                ok = true;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally { db.Close(); }
+        return ok;
     }
 
-    public async Task<Actividades> GetActividadByCodigo(string CodigoCaeb)
+    public async Task<Actividades> GetActividadByCodigo(string CodigoActividad)
     {
         using var db = _context.CreateConnection;
         try
         {
             db.Open();
-            var query = @"SELECT  * FROM siat.actividades WHERE codigo_caeb = @CodigoCaeb";
-            var actividad = await db.QueryFirstOrDefaultAsync<Actividades>(query,new {CodigoCaeb});
+            var query = @"SELECT  * FROM siat.actividades WHERE codigo_actividad = @CodigoActividad";
+            var actividad = await db.QueryFirstOrDefaultAsync<Actividades>(query, new { CodigoActividad });
             actividad ??= new Actividades();
-            return actividad;     
+            return actividad;
         }
         catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
         catch (Exception ex) { throw new Exception(ex.Message, ex); }
-        finally {db.Close(); }
-       
+        finally { db.Close(); }
+
+    }
+
+    public async Task<bool> EnableActividad(Actividades actividad)
+    {
+        bool ok = false;
+        using var db = _context.CreateConnection;
+        try
+        {
+            db.Open();
+            using var transaction = db.BeginTransaction();
+            try
+            {
+                string sqlQuery = @" UPDATE siat.actividades
+                                        SET state = @State, modified = @Modified
+                                      WHERE id = @Id
+                                   ";
+
+                var result = await db.ExecuteAsync(sqlQuery, actividad);
+                transaction.Commit();
+                ok = true;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally { db.Close(); }
+        return ok;
     }
 }

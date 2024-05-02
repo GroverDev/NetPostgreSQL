@@ -11,4 +11,6 @@ public interface ILeyendasFacturaRepository
     Task<bool> DisableAllLeyendasFactura();
 
     Task<bool> EnableLeyendaFactura(LeyendasFactura actividad);   
+
+    Task<string> GetLeyendaFacturaAleatoria(string CodigoActividad);
 }

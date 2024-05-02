@@ -114,4 +114,34 @@ public class LeyendasFacturaRepository(FacturacionDbContext _context) : ILeyenda
         catch (Exception ex) { throw new Exception(ex.Message, ex); }
         finally { db.Close(); }
     }
+
+    public async Task<string> GetLeyendaFacturaAleatoria(string CodigoActividad)
+    {
+        using var db = _context.CreateConnection;
+        try
+        {
+            db.Open();
+            var query = @"SELECT  * 
+                            FROM siat.leyendas_factura
+                           WHERE codigo_actividad= @CodigoActividad ";
+            var leyendas = await db.QueryAsync<LeyendasFactura>(query, new { CodigoActividad});
+            string leyenda ="";
+            if (leyendas.ToList().Count <= 0)
+                {
+                    throw new CustomException("No hay leyendas en las parametricas para la actividad: "+ CodigoActividad);
+                }
+                else
+                {
+                    int nroLeyendas = leyendas.ToList().Count;
+                    Random rand = new Random();
+                    var random =  rand.Next(1,nroLeyendas);
+                    leyenda= leyendas.ToList()[random].DescripcionLeyenda;
+                }
+            return leyenda== ""? "Ley N° 453: Puedes acceder a la reclamación cuando tus derechos han sido vulnerados.": leyenda;
+        }
+        catch (CustomException ex) { throw new CustomException(ex.Message, ex); }
+        catch (Exception ex) { throw new Exception(ex.Message, ex); }
+        finally { db.Close(); }
+    }
+ 
 }

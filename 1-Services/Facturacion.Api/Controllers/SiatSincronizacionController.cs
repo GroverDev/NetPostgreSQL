@@ -9,25 +9,28 @@ namespace Facturacion.Api;
 [Route("api/[controller]")]
 [ApiController]
 
-public class SiatSincronizacionController(IProductosServiciosApplication _productosServiciosApplication) : ControllerBase
+public class SiatSincronizacionController(ILeyendasFacturaApplication _leyendasFacturaApplication) : ControllerBase
 {
      [HttpGet("VerificaComunicacion")]
     public async Task<ActionResult<Response<bool>>> GetVerifica()
     {
-        // var response =  await _actividadesApplication.OkComunnication();
+        // var response =  await actividadesApplication.OkComunnication();
         // return Ok(response);
 
-        // var response = await _actividadesApplication.UpdateActividadesDocumentoSector(1);
+        // var response =  await actividadesApplication.UpdateActividades(1);
         // return Ok(response);
 
-        // var response = await _leyendasFacturaApplication.UpdateLeyendasFactura(1);
+        // var response = await _actividadesDocumentoSectorApplication.UpdateActividadesDocumentoSector(1);
         // return Ok(response);
+
+        var response = await _leyendasFacturaApplication.(1);
+        return Ok(response);
 
         // var response = await _parametrosApplication.UpdateParametros(1);
         // return Ok(response);
 
-        var response = await _productosServiciosApplication.UpdateProductos(1);
-        return Ok(response);
+        // var response = await _productosServiciosApplication.UpdateProductos(1);
+        // return Ok(response);
 
     }
 }
