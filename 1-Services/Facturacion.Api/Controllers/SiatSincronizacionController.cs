@@ -9,7 +9,7 @@ namespace Facturacion.Api;
 [Route("api/[controller]")]
 [ApiController]
 
-public class SiatSincronizacionController(ILeyendasFacturaApplication _leyendasFacturaApplication) : ControllerBase
+public class SiatSincronizacionController(ICufdApplication _cufdApplication) : ControllerBase
 {
      [HttpGet("VerificaComunicacion")]
     public async Task<ActionResult<Response<bool>>> GetVerifica()
@@ -23,7 +23,10 @@ public class SiatSincronizacionController(ILeyendasFacturaApplication _leyendasF
         // var response = await _actividadesDocumentoSectorApplication.UpdateActividadesDocumentoSector(1);
         // return Ok(response);
 
-        var response = await _leyendasFacturaApplication.(1);
+        // var response = await _leyendasFacturaApplication.GetLeyendaFacturaAleatoria("521020");
+        // return Ok(response);
+
+        var response = await _cufdApplication.UpdateCufd(1);
         return Ok(response);
 
         // var response = await _parametrosApplication.UpdateParametros(1);

@@ -14,6 +14,12 @@ public class LeyendasFacturaApplication
         IMapper _mapper
     ) : ILeyendasFacturaApplication
 {
+    public async Task<string> GetLeyendaFacturaAleatoria(string CodigoActividad)
+    {
+        string resp = await _leyendasFacturaRepository.GetLeyendaFacturaAleatoria(CodigoActividad);
+        return resp;
+    }
+
     public async Task<Response<bool>> UpdateLeyendasFactura(int createdBy)
     {
         var response = new Response<bool>();
