@@ -16,13 +16,18 @@ public class CufdRepository(FacturacionDbContext _context) : ICufdRepository
             using var transaction = db.BeginTransaction();
             try
             {
-                string sqlQuery = @"
+                string sqlQuery = @" UPDATE siat.cufd
+                                        SET vigente = False
+                                      WHERE id_punto_venta = @IdPuntoVenta AND state AND vigente";
+                var result = await db.ExecuteAsync(sqlQuery, cufd);
+                
+                sqlQuery = @"
                     INSERT INTO siat.cufd
                               (id, codigo, codigo_control, fecha_inicio, fecha_vigencia, vigente, id_punto_venta, state, created_by, created, modified_by, modified)
                         VALUES(@Id, @Codigo, @CodigoControl, @FechaInicio, @FechaVigencia, @Vigente, @IdPuntoVenta, @State, @CreatedBy, @Created, @ModifiedBy, @Modified);
                     ";
 
-                var result = await db.ExecuteAsync(sqlQuery, cufd);
+                 result = await db.ExecuteAsync(sqlQuery, cufd);
                 transaction.Commit();
                 ok = true;
             }
