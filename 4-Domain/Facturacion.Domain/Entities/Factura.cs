@@ -24,6 +24,7 @@ public class Factura
     public string NumeroTarjeta { get; set; } = "";
     public decimal MontoTotal { get; set; }
     public decimal MontoTotalSujetoIva { get; set; }
+    public decimal MontoGiftCard { get; set; }
     public int CodigoMoneda { get; set; }
     public decimal TipoCambio { get; set; }
     public decimal MontoTotalMoneda { get; set; }
