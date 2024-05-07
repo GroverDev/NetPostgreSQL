@@ -10,25 +10,22 @@ using Common.Utilities;
 using Common.Utilities.Exceptions;
 using Facturacion.Domain;
 using Microsoft.Extensions.Options;
+using Npgsql.Replication;
 
 namespace Facturacion.Application;
 
 public class XmlApplication(IOptions<ConfigSiat> configSiat)
 {
     private readonly  ConfigSiat _configSiat = configSiat.Value;
-    public static Response<bool> ArmaFirmaValidaYGuardaXML(Factura factura)
+    public Response<bool> ArmaFirmaValidaYGuardaXML(Factura factura)
     {
         var resp = new Response<bool>();
-        Response<XmlDocument> respuesta = new Response<XmlDocument>();
-        XmlDocument Xml = new XmlDocument();
-        XmlDocument XmlDocFirmado = new XmlDocument();
-
+        XmlDocument Xml = new();
+        
         XDocument XmlDoc; // = new XDocument();            
         XElement Cuerpo, Cabecera, Detalle;
         XNamespace ns = "http://www.w3.org/2001/XMLSchema-instance";
         string nombreDocumentoSector = "factura.esquemaDocumentoSector"; // todo
-        string mensaje = "";
-        string nombre = "";
 
         try
         {
@@ -56,12 +53,6 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
             Cabecera.Add(new XElement("numeroDocumento", factura.NumeroDocumento));
             Cabecera.Add(factura.Complemento == "" ? new XElement("complemento", nil) : new XElement("complemento", factura.Complemento));
             Cabecera.Add(new XElement("codigoCliente", factura.CodigoCliente));
-            // Solo para las factura de tipo inmueble
-            // Todo
-            // if (factura.CodigoDocumentoSector == TipoDocumentoSector.Alquiler || factura.codigoDocumentoSector == TipoDocumentoSector.ZonaFrancaAlquiler)
-            // {
-            //     Cabecera.Add(new XElement("periodoFacturado", factura.periodoFacturado));
-            // }
             Cabecera.Add(new XElement("codigoMetodoPago", factura.CodigoMetodoPago));
             Cabecera.Add(factura.NumeroTarjeta == "" ? new XElement("numeroTarjeta", nil) : new XElement("numeroTarjeta", factura.NumeroTarjeta));
             Cabecera.Add(new XElement("montoTotal", factura.MontoTotal));
@@ -69,17 +60,6 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
             Cabecera.Add(new XElement("codigoMoneda", factura.CodigoMoneda));
             Cabecera.Add(new XElement("tipoCambio", factura.TipoCambio));
             Cabecera.Add(new XElement("montoTotalMoneda", factura.MontoTotalMoneda));
-            // TOdo
-            // Solo para zona franca
-            // if (factura.codigoDocumentoSector == TipoDocumentoSector.ZonaFranca)
-            // {
-            //     Cabecera.Add((factura.numeroParteRecepcion == "" ? new XElement("numeroParteRecepcion", nil) : new XElement("numeroParteRecepcion", factura.numeroParteRecepcion)));
-            // }
-            // // Solo para factura de compra y Venta y Zona Franca
-            // if (factura.codigoDocumentoSector == TipoDocumentoSector.CompraYVenta || factura.codigoDocumentoSector == TipoDocumentoSector.ZonaFranca)
-            // {
-            //     Cabecera.Add((factura.montoGiftCard < 0 ? new XElement("montoGiftCard", nil) : new XElement("montoGiftCard", factura.montoGiftCard)));
-            // }
             Cabecera.Add(new XElement("descuentoAdicional", factura.DescuentoAdicional));
             Cabecera.Add(factura.CodigoExcepcion < 0 ? new XElement("codigoExcepcion", nil) : new XElement("codigoExcepcion", factura.CodigoExcepcion));
             Cabecera.Add(factura.Cafc == "" ? new XElement("cafc", nil) : new XElement("cafc", factura.Cafc));
@@ -120,19 +100,19 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
             Xml.LoadXml(sw.ToString());
 
             // Firmamos el XML
-            respuesta = FirmarXML(Xml);
+            var respuesta = FirmarXML(Xml);
             if (respuesta.Ok)
             {
-                XmlDocFirmado = respuesta.Data ?? new XmlDocument();
+                var XmlDocFirmado = respuesta.Data ?? new XmlDocument();
                 // Validamos el XML si cumple con el esquema de Impuestos Nacionales
-                mensaje = ValidarXML(XmlDocFirmado, "factura.esquemaDocumentoSector"); // todo
+                string mensaje = ValidarXML(XmlDocFirmado, "factura.esquemaDocumentoSector"); // todo
                 if (mensaje != "")
                 {
                     throw new CustomException(mensaje);
                 }
                 //guardo el documento en el disco
-                var rutaAGuardar = ""; // todo Appsettings.GetValor("FacturasXmlStorage", "Ruta").ToString();
-                nombre = rutaAGuardar + "factura.nombre_xml_firmado"; // todo
+                var rutaAGuardar = _configSiat.FacturaPathStorage; 
+                string nombre = rutaAGuardar + "factura.nombre_xml_firmado"; // todo
                 XmlTextWriter xmltw = new(nombre, new UTF8Encoding(false));
                 xmltw.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
                 XmlDocFirmado.WriteTo(xmltw);
@@ -162,7 +142,7 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
     /// </summary>
     /// <param name="xml">string del XML</param>
     /// <returns>Retorna on obeto de tipo respuesta donde en datos devuelve el string del XML firmado</returns>
-    protected static Response<XmlDocument> FirmarXML(XmlDocument Xmldoc)
+    protected  Response<XmlDocument> FirmarXML(XmlDocument Xmldoc)
     {
         Response<XmlDocument> respuesta = new();
         string Certificate, private_Key, privateKey;
@@ -171,8 +151,8 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
 
         try
         {
-            Certificate = ""; // todo Comun.Herramientas.Appsettings.GetValor("Firma", "certificado") ?? "";
-            private_Key = "";  // todo Comun.Herramientas.Appsettings.GetValor("Firma", "privateKey") ?? "";
+            Certificate =  _configSiat.FirmaPathCertificado; 
+            private_Key =  _configSiat.FirmaPathKeyPrivada;  
             privateKey = System.IO.File.ReadAllText(private_Key);
             rsaKey.ImportFromPem(privateKey.ToCharArray());
 
@@ -224,10 +204,10 @@ public class XmlApplication(IOptions<ConfigSiat> configSiat)
     /// </summary>
     /// <param name="Xmldoc">Documento XML a ser verificado</param>
     /// <param name="esquema">Nombre del esquema con el cual se validara</param>
-    /// <returns>Si todo esta correcto retorna una cadena vacia, si hay alguna observación a la validación retorna la observación.</returns>
-    protected static string ValidarXML(XmlDocument Xmldoc, string esquema)
+    /// <returns>Si esta correcto retorna una cadena vacia, si hay alguna observación a la validación retorna la observación.</returns>
+    protected  string ValidarXML(XmlDocument Xmldoc, string esquema)
     {
-        string path_XSD = ""; // todo Comun.Herramientas.Appsettings.GetValor("Firma", "path_xsd") ?? "";
+        string path_XSD = _configSiat.FirmaPathXsd; 
         string respuesta = "";
 
         try
